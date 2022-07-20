@@ -8,7 +8,7 @@ function ContactList({ contacts, onDelete }) {
             <ContactListItem 
                 key={contact.id}
                 name={contact.name}
-                number={contact.number}
+                number={contact.phone}
                 id={contact.id}
                 deleteContact={onDelete}
             />
@@ -27,7 +27,7 @@ ContactList.propTypes = {
         PropTypes.shape({
           id: PropTypes.string,
           name: PropTypes.string,
-          number: PropTypes.string
+          phone: PropTypes.string
         })
       ).isRequired,
     onDelete: PropTypes.func.isRequired

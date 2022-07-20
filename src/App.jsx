@@ -1,39 +1,52 @@
 import { useSelector, useDispatch } from 'react-redux';
-
+import { useState, useEffect } from "react";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
 import Filter from "./components/Filter";
 
-import { add, remove, changeFilter  } from "./redux/contacts/contacts-slice";
-import { getAllContacts, getFilteredContacts } from "./redux/contacts/contacts-selectors";
+import { fetchContacts, addContact, removeContact } from "./redux/contacts/contacts-operations";
+import { getAllContacts } from "./redux/contacts/contacts-selectors";
 
 function App() {
   const contacts = useSelector(getAllContacts);
-  const visibleContacts = useSelector(getFilteredContacts);
   const dispatch = useDispatch();
+  const [ filter, setFilter ] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const onAddContact = ( data ) => { 
-    const { name } = data;  
-    const isMached = contacts.find(item => item.name.toLowerCase() === name.toLowerCase());
-    isMached ? alert(`${name} is already in contacts`) : 
-    dispatch(add(data))
+    dispatch(addContact(data))
   };
 
   const onDeleteContact = (contactId) => {
-    dispatch(remove(contactId))
+    dispatch(removeContact(contactId))
   };
 
-  const onFilterChange = (e) => {
-    dispatch(changeFilter(e.target.value));
+  const changeFilter = (e) => {
+    setFilter(e.target.value);
   };
+    
+  const getVisibleContacts = () => {
+    if (!filter) {
+      return contacts;
+    }
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase()),
+    );
+  };
+
+  const filteredContacts = getVisibleContacts();
 
   return (
     <div>
       <h1>Phonebook</h1>
       <ContactForm onSubmit={onAddContact}/>
       <h2>Contacts</h2>
-      <Filter onChange={onFilterChange}/>
-      <ContactList contacts={visibleContacts} onDelete={onDeleteContact} />
+      <Filter onChange={changeFilter}/>
+      <ContactList contacts={filteredContacts} onDelete={onDeleteContact} />
     </div>
   );
 };

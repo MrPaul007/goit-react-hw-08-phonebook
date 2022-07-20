@@ -1,35 +1,78 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { nanoid } from "nanoid";
-import initialContacts from "../../data/initialContacts";
+
+import {fetchContacts, addContact, removeContact} from "./contacts-operations";
 
 const initialState = {
-        items: initialContacts,
-        filter: "",
-}
+    items: [],
+    loading: false,
+    error: null
+};
 
-const contacts = createSlice({
+const contactsSlice = createSlice({
     name: "contacts",
     initialState,
-    reducers: {
-        add: {
-            reducer: (store, { payload }) => {
-                store.items.push(payload);
-            },
-            prepare: (data) => {
-                return {
-                    payload: { ...data, id: nanoid() }
-                }
-            },
+    extraReducers: {
+        [fetchContacts.pending]: (store) => ({...store, loading: true, error: null}),
+        [fetchContacts.fulfilled]: (store, {payload}) => {
+            store.items = payload;
+            store.loading = false;
         },
-        remove: (store, { payload }) => {
-            store.items = store.items.filter(item => item.id !== payload)
+        [fetchContacts.rejected]: (store, {payload}) => ({...store, loading: false, error: payload}),
+        [addContact.pending]: (store) => ({...store, loading: true, error: null}),
+        [addContact.fulfilled]: (store, {payload}) => {
+            store.items.push(payload);
+            store.loading = false;
         },
-        changeFilter: (store, {payload}) => {
-            store.filter = payload;
+        [addContact.rejected]: (store, {payload}) => ({...store, loading: false, error: payload}),
+        [removeContact.pending]: (store) => {
+            store.loading = true;
+            store.error = null;
+        },
+        [removeContact.fulfilled]: (store, {payload}) => {
+            store.items = store.items.filter(item => item.id !== payload.id);
+            store.loading = false;
+        },
+        [removeContact.rejected]: (store, {payload}) => {
+            store.loading = false;
+            store.error = payload;
         }
     }
 });
 
-export const {add, remove, changeFilter} = contacts.actions;
+export default contactsSlice.reducer;
 
-export default contacts.reducer;
+
+// import { createSlice } from "@reduxjs/toolkit";
+// import { nanoid } from "nanoid";
+
+// const initialState = {
+//         items: [],
+//         filter: "",
+// }
+
+// const contacts = createSlice({
+//     name: "contacts",
+//     initialState,
+//     reducers: {
+//         add: {
+//             reducer: (store, { payload }) => {
+//                 store.items.push(payload);
+//             },
+//             prepare: (data) => {
+//                 return {
+//                     payload: { ...data, id: nanoid() }
+//                 }
+//             },
+//         },
+//         remove: (store, { payload }) => {
+//             store.items = store.items.filter(item => item.id !== payload)
+//         },
+//         changeFilter: (store, {payload}) => {
+//             store.filter = payload;
+//         }
+//     }
+// });
+
+// export const {add, remove, changeFilter} = contacts.actions;
+
+// export default contacts.reducer;
