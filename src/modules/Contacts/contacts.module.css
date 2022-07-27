@@ -1,0 +1,9 @@
+.content{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+
+.form {
+    width: 400px;
+}

@@ -1,0 +1,21 @@
+.pageContainer {
+    text-align: center;
+    margin-top: 120px;
+  }
+
+.text {
+    font-size: 20px;
+}
+
+.link {
+    text-decoration: none;
+    cursor: pointer;
+    color:rgb(104, 140, 173);
+    font-size: 20px;
+}
+
+.link:hover {
+    text-decoration: underline;
+    color: rgb(111, 186, 244);
+  }
+  

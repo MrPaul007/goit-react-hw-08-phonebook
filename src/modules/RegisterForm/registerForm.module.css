@@ -1,0 +1,22 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 0 10px;
+  padding-bottom: 20px;
+  width: 300px;
+}
+
+.link {
+  text-decoration: none;
+  color: rgb(111, 186, 244);
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.text {
+  font-size: 18px;
+}
